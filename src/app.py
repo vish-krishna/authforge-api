@@ -4,7 +4,7 @@ from fastapi import FastAPI
 # from src.config.secrets import SECRETS
 # from src.core.error_handler import register_error_handlers
 # from src.db import close_db, connect_db
-# from src.logger import logger
+from src.logger import logger
 
 
 @asynccontextmanager
@@ -15,12 +15,13 @@ async def lifespan(app: FastAPI):
     # 2. Establish DB pool with the fetched credentials
     # await connect_db(database_url=SECRETS.database_url)
 
-    # logger.info("Application startup complete.")
+    logger.info("Application startup complete.")
+    logger.debug("debug Application startup complete.")
     yield
 
     # 3. Clean teardown
     # await close_db()
-    # logger.info("Application shutdown complete.")
+    logger.info("Application shutdown complete.")
 
 
 def create_app() -> FastAPI:
