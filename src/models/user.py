@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import Boolean, Index, Integer, String
+from sqlalchemy import Boolean, Index, Integer, String, func, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -65,8 +65,8 @@ class User(Base, TimestampMixin):
         # Partial index: Enforces case-insensitive uniqueness across non-deleted rows
         Index(
             "uq_users_active_email",
-            "email",
+            func.lower(text("email")),
             unique=True,
-            postgresql_where=(TimestampMixin.deleted_at.is_(None)),
+            postgresql_where=text("deleted_at IS NULL"),
         ),
     )

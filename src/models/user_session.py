@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String, func
+from sqlalchemy import Boolean, DateTime, ForeignKey, Index, String, func, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -39,6 +39,14 @@ class UserSession(Base, CreatedAtMixin):
     user: Mapped["User"] = relationship("User", back_populates="sessions")
 
     __table_args__ = (
-        Index("ix_user_sessions_lookup", "refresh_token_hash", postgresql_where=(is_revoked.is_(False))),
-        Index("ix_user_sessions_active", "user_id", postgresql_where=(is_revoked.is_(False))),
+        Index(
+            "ix_user_sessions_lookup", 
+            "refresh_token_hash", 
+            postgresql_where=text("is_revoked = FALSE"),
+        ),
+        Index(
+            "ix_user_sessions_active", 
+            "user_id", 
+            postgresql_where=text("is_revoked = FALSE")
+        ),
     )

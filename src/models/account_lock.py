@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import DateTime, ForeignKey, Index, String, func
+from sqlalchemy import DateTime, ForeignKey, Index, String, func, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -48,5 +48,9 @@ class AccountLock(Base):
     unlocker: Mapped["User | None"] = relationship("User", foreign_keys=[unlocked_by])
 
     __table_args__ = (
-        Index("ix_account_locks_active", "user_id", postgresql_where=(unlocked_at.is_(None))),
+        Index(
+            "ix_account_locks_active", 
+            "user_id", 
+            postgresql_where=text("unlocked_at IS NULL"),
+        ),
     )
