@@ -15,8 +15,6 @@ async def lifespan(app: FastAPI):
     # 2. Establish DB pool with the fetched credentials
     await connect_db()
 
-    await create_all_tables()  # Optional: Create tables if they don't exist (for dev/testing)
-
     logger.info("Application startup complete.")
     logger.debug("debug Application startup complete.")
     yield
